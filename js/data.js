@@ -5,11 +5,11 @@
 // Women's: the 37 programs in the owner's AAU Dynasty file, in the
 // commissioner's conferences (Vanderbilt and UC Davis are the only lacrosse
 // teams in their conferences, so they play no conference games).
-// Men's: the 24 programs in the owner's file, in four six-team men's lacrosse
-// conferences made for these dynasties (rename or realign them in the
-// offseason): the Ivy League (Penn moves to the Midlands), the Atlantic
-// Lacrosse League, the Midlands Lacrosse League and the Metro Conference.
-// Johns Hopkins plays Division I lacrosse in real life and is rated that way.
+// Men's: the 24 programs in the owner's file, in the commissioner's
+// conferences: Ivy League 7, Coastal Atlantic 5, Metro 4, UAA 4 (Johns
+// Hopkins, which plays Division I lacrosse in real life and is rated that
+// way, with Case Western, MIT and Tufts), Big Ten 3 and Utah alone in the
+// Pac-10 (no conference games).
 // Colors and mascots are each school's real ones.
 //
 // Ratings: ATT (attack), MID (midfield and possession) and DEF (defense and
@@ -38,12 +38,12 @@
 // Coaches who couldn't be confirmed start as open jobs; name them on the
 // Coaches page. Home fields are each school's lacrosse stadium.
 
-import { DEFAULT_LOGOS } from './logo-import.js?v=20261102103649';
+import { DEFAULT_LOGOS } from './logo-import.js?v=20261102111648';
 
 export const START_YEAR = 2030;
 
 // The commissioner's conferences (from the AAU Dynasty), each with a logo
-// drawn for these dynasties (img/conf/), and the men's lacrosse conferences.
+// drawn for these dynasties (img/conf/).
 const L = f => `img/conf/${f}.svg`;
 export const CONFERENCES = {
   'Big Ten': { abbr: 'B1G', color: '#0088CE', altColor: '#0B2A4A', logo: L('bigten') },
@@ -54,8 +54,6 @@ export const CONFERENCES = {
   'Southwest Conference': { abbr: 'SWC', color: '#719AE8', altColor: '#F28C38', logo: L('swc') },
   'UC Athletic Association': { abbr: 'UCAA', color: '#0F6E7A', altColor: '#F2C14E', logo: L('ucaa') },
   'University Athletic Association': { abbr: 'UAA', color: '#003087', altColor: '#F2B33D', logo: L('uaa') },
-  'Atlantic Lacrosse League': { abbr: 'ALL', color: '#1B4F72', altColor: '#F0B323' },
-  'Midlands Lacrosse League': { abbr: 'MLL', color: '#7B2D26', altColor: '#E8C547' },
 };
 
 // [school, conference, abbr, mascot, color, altColor, OVR]
@@ -99,30 +97,30 @@ const WOMEN = [
   ["MIT", 'University Athletic Association', 'MIT', "Engineers", '#A31F34', '#8A8B8C', 44],
 ];
 const MEN = [
-  ["Notre Dame", 'Atlantic Lacrosse League', 'ND', "Fighting Irish", '#0C2340', '#C99700', 91],
-  ["Duke", 'Atlantic Lacrosse League', 'DUKE', "Blue Devils", '#00539B', '#FFFFFF', 88],
-  ["North Carolina", 'Atlantic Lacrosse League', 'UNC', "Tar Heels", '#7BAFD4', '#13294B', 87],
-  ["Johns Hopkins", 'Atlantic Lacrosse League', 'JHU', "Blue Jays", '#002D72', '#68ACE5', 84],
-  ["Virginia", 'Atlantic Lacrosse League', 'UVA', "Cavaliers", '#232D4B', '#E57200', 80],
-  ["Maryland", 'Atlantic Lacrosse League', 'MD', "Terrapins", '#E21833', '#FFD200', 79],
+  ["Penn State", 'Big Ten', 'PSU', "Nittany Lions", '#041E42', '#FFFFFF', 86],
+  ["Ohio State", 'Big Ten', 'OSU', "Buckeyes", '#BB0000', '#666666', 74],
+  ["Michigan", 'Big Ten', 'MICH', "Wolverines", '#00274C', '#FFCB05', 68],
+  ["Notre Dame", 'Coastal Atlantic Conference', 'ND', "Fighting Irish", '#0C2340', '#C99700', 91],
+  ["Duke", 'Coastal Atlantic Conference', 'DUKE', "Blue Devils", '#00539B', '#FFFFFF', 88],
+  ["North Carolina", 'Coastal Atlantic Conference', 'UNC', "Tar Heels", '#7BAFD4', '#13294B', 87],
+  ["Virginia", 'Coastal Atlantic Conference', 'UVA', "Cavaliers", '#232D4B', '#E57200', 80],
+  ["Maryland", 'Coastal Atlantic Conference', 'MD', "Terrapins", '#E21833', '#FFD200', 79],
   ["Princeton", 'Ivy League', 'PRIN', "Tigers", '#E77500', '#000000', 92],
   ["Cornell", 'Ivy League', 'COR', "Big Red", '#B31B1B', '#FFFFFF', 81],
   ["Harvard", 'Ivy League', 'HARV', "Crimson", '#A51C30', '#1E1E1E', 78],
   ["Yale", 'Ivy League', 'YALE', "Bulldogs", '#00356B', '#FFFFFF', 75],
+  ["Penn", 'Ivy League', 'PENN', "Quakers", '#011F5B', '#990000', 72],
   ["Brown", 'Ivy League', 'BRWN', "Bears", '#4E3629', '#C00404', 63],
   ["Dartmouth", 'Ivy League', 'DART', "Big Green", '#00693E', '#FFFFFF', 61],
   ["Georgetown", 'Metro Conference', 'GTWN', "Hoyas", '#041E42', '#63666A', 82],
   ["Boston University", 'Metro Conference', 'BU', "Terriers", '#CC0000', '#FFFFFF', 70],
   ["Stony Brook", 'Metro Conference', 'SBU', "Seawolves", '#990000', '#16243E', 70],
-  ["Tufts", 'Metro Conference', 'TUFT', "Jumbos", '#3E8EDE', '#002E6D', 54],
-  ["Case Western", 'Metro Conference', 'CWRU', "Spartans", '#0A304E', '#FFFFFF', 46],
-  ["MIT", 'Metro Conference', 'MIT', "Engineers", '#A31F34', '#8A8B8C', 45],
-  ["Penn State", 'Midlands Lacrosse League', 'PSU', "Nittany Lions", '#041E42', '#FFFFFF', 86],
-  ["Ohio State", 'Midlands Lacrosse League', 'OSU', "Buckeyes", '#BB0000', '#666666', 74],
-  ["Penn", 'Midlands Lacrosse League', 'PENN', "Quakers", '#011F5B', '#990000', 72],
-  ["Michigan", 'Midlands Lacrosse League', 'MICH', "Wolverines", '#00274C', '#FFCB05', 68],
-  ["Rutgers", 'Midlands Lacrosse League', 'RUTG', "Scarlet Knights", '#CC0033', '#5F6A72', 68],
-  ["Utah", 'Midlands Lacrosse League', 'UTAH', "Utes", '#CC0000', '#000000', 65],
+  ["Rutgers", 'Metro Conference', 'RUTG', "Scarlet Knights", '#CC0033', '#5F6A72', 68],
+  ["Utah", 'Pacific-10 Conference', 'UTAH', "Utes", '#CC0000', '#000000', 65],
+  ["Johns Hopkins", 'University Athletic Association', 'JHU', "Blue Jays", '#002D72', '#68ACE5', 84],
+  ["Tufts", 'University Athletic Association', 'TUFT', "Jumbos", '#3E8EDE', '#002E6D', 54],
+  ["Case Western", 'University Athletic Association', 'CWRU', "Spartans", '#0A304E', '#FFFFFF', 46],
+  ["MIT", 'University Athletic Association', 'MIT', "Engineers", '#A31F34', '#8A8B8C', 45],
 ];
 
 // Home fields: [stadium, city]. Every one can be edited on the team page.

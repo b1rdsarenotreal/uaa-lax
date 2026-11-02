@@ -2,9 +2,9 @@
 
 A college lacrosse dynasty set in 2030, women's and men's as two separate
 dynasties behind a switch in the top bar: women's has the owner's 37 AAU
-lacrosse programs in his conferences, men's the 24 men's programs in four
-six-team men's lacrosse conferences made for this dynasty (the owner asked
-for that, like men's volleyball). It started as a copy of AAU Basketball
+lacrosse programs and men's his 24, both in his conferences (the owner
+asked to drop the made-up men's conferences; `ALIGNMENT` 2 moves unstarted
+saves back). It started as a copy of AAU Basketball
 (itself from AAU Field Hockey, AAU Soccer, AAU Volleyball and the owner's MCS
 Dynasty) and keeps that engine and its features, adapted to lacrosse.
 
@@ -23,6 +23,8 @@ unless the owner asks.
   the last one. `setOvertime` in `js/sim.js` sets the live `OT` on load.
 - Ratings are stored as `off`, `pit`, `def` and shown as ATT, MID, DEF.
   OVR = 0.4/0.3/0.3.
+- Conferences of 6 or fewer play everyone home and away (`confTarget`,
+  `DOUBLE_ROUND_ROBIN_MAX`); bigger ones everyone once.
 - Every league has `league.sport = 'lacrosse'` so AAU History can tell it
   from field hockey (both have four low-scoring quarters).
 - Schedule (`js/schedule.js`): week 1 starts the last Monday in January

@@ -30,15 +30,16 @@ backup** keeps a copy. AAU History reads these backups (they carry
 | University Athletic Association | Johns Hopkins, MIT, Rochester, Tufts |
 | Southwest Conference / UC Athletic Association | Vanderbilt, UC Davis (no conference games) |
 
-**Men's: 24 programs** in four six-team lacrosse conferences made for this
-dynasty (rename or realign them in the offseason):
+**Men's: 24 programs**, also in the commissioner's conferences:
 
 | Conference | Teams |
 |---|---|
-| Ivy League | Brown, Cornell, Dartmouth, Harvard, Princeton, Yale |
-| Atlantic Lacrosse League | Duke, Johns Hopkins, Maryland, North Carolina, Notre Dame, Virginia |
-| Midlands Lacrosse League | Michigan, Ohio State, Penn, Penn State, Rutgers, Utah |
-| Metro Conference | Boston University, Case Western, Georgetown, MIT, Stony Brook, Tufts |
+| Ivy League | Brown, Cornell, Dartmouth, Harvard, Penn, Princeton, Yale |
+| Coastal Atlantic Conference | Duke, Maryland, North Carolina, Notre Dame, Virginia |
+| Metro Conference | Boston University, Georgetown, Rutgers, Stony Brook |
+| University Athletic Association | Case Western, Johns Hopkins, MIT, Tufts |
+| Big Ten | Michigan, Ohio State, Penn State |
+| Pacific-10 Conference | Utah (no conference games) |
 
 Real colors, real 2026 head coaches (a few unconfirmed jobs start open) and
 real home fields.
@@ -65,11 +66,11 @@ Northwestern's women, the 2026 national champions, start on top.
   April.
 - **Conference play fills the last weeks**, one game a week on Saturday
   (with a Wednesday game in some weeks). Conferences of 6 or fewer play
-  everyone **home and away**; bigger ones (the women's Ivy and Coastal
-  Atlantic) everyone once. The men play 10 conference games.
+  everyone **home and away**; bigger ones (the Ivy, and the women's Coastal
+  Atlantic) everyone once.
 - **Non-conference games**, mostly Saturdays with some Tuesdays and
-  Wednesdays, against nearby teams of a similar level. Men's teams play
-  about 6 (16 games in all), women's up to 17 games. At most two games a
+  Wednesdays, against nearby teams of a similar level, up to 16 games for
+  men and 17 for women. At most two games a
   week, never on back-to-back days.
 
 ## The postseason

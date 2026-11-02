@@ -22,13 +22,15 @@ const count = (games, pick = () => true) => { const c = {}; for (const g of game
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const absDay = g => g.week * 7 + DAYS.indexOf(g.day);
 
-check("the AAU lacrosse programs: women's in the commissioner's conferences, men's in four lacrosse conferences", () => {
+check("the AAU lacrosse programs in the commissioner's conferences", () => {
   assert.deepEqual(Object.keys(SIDES), ['women', 'men']);
   const W = seedTeams('women'), M = seedTeams('men');
   assert.equal(Object.keys(W).length, 37); assert.equal(Object.keys(M).length, 24);
   const sizes = T => { const z = {}; for (const t of Object.values(T)) z[t.conference] = (z[t.conference] || 0) + 1; return z; };
   assert.deepEqual(sizes(W), { 'Big Ten': 4, 'Coastal Atlantic Conference': 7, 'Ivy League': 8, 'Metro Conference': 6, 'Pacific-10 Conference': 6, 'Southwest Conference': 1, 'UC Athletic Association': 1, 'University Athletic Association': 4 });
-  assert.deepEqual(sizes(M), { 'Atlantic Lacrosse League': 6, 'Ivy League': 6, 'Metro Conference': 6, 'Midlands Lacrosse League': 6 });
+  assert.deepEqual(sizes(M), { 'Big Ten': 3, 'Coastal Atlantic Conference': 5, 'Ivy League': 7, 'Metro Conference': 4, 'Pacific-10 Conference': 1, 'University Athletic Association': 4 });
+  assert.equal(M['Johns Hopkins'].conference, 'University Athletic Association');
+  assert.ok(!CONFERENCES['Atlantic Lacrosse League'] && !CONFERENCES['Midlands Lacrosse League'], 'no made-up conferences');
   for (const T of [W, M]) {
     assert.ok(Object.values(T).every(t => t.stadium && t.city && t.color && t.mascot), 'fields, cities, colors, mascots');
     for (const t of Object.values(T)) assert.ok(Math.abs(ovr(t) - (t.off * 0.4 + t.pit * 0.3 + t.def * 0.3)) < 1);
@@ -112,8 +114,10 @@ for (const side of ['women', 'men']) check(`${side}'s schedule: weekends and mid
   }
   for (const x of g.filter(x => x.confGame)) assert.ok(['Wed', 'Sat'].includes(x.day));
   if (side === 'men') {
-    assert.deepEqual(Object.values(conf).sort(), Array(24).fill(10));
-    assert.ok(Object.values(count(g.filter(x => !x.confGame))).every(k => k >= 4 && k <= 6), 'about six non-conference games');
+    assert.equal(conf.Princeton, 6, 'the 7-team Ivy plays everyone once');
+    assert.equal(conf.Duke, 8, 'the 5-team Coastal Atlantic plays everyone twice');
+    assert.equal(conf.Michigan, 4, 'the 3-team Big Ten plays everyone twice');
+    assert.ok(!conf.Utah, 'Utah has no conference games');
   }
   assert.ok(g.every(x => x.confGame || s.teams[x.home].conference !== s.teams[x.away].conference));
 });
@@ -158,7 +162,7 @@ for (const side of ['women', 'men']) {
       assert.equal(ev.size, 4);
       assert.deepEqual([...new Set(s.games.filter(g => g.event === ev.id).map(g => g.day))].sort(), ['Fri', 'Sun']);
     }
-    assert.equal(Object.keys(s.post.confT).length, side === 'men' ? 4 : 6);
+    assert.equal(Object.keys(s.post.confT).length, side === 'men' ? 4 : 6, 'conferences of 4 or more');
     const auto = Object.values(autoBids(s));
     assert.ok(auto.every(t => s.post.field.some(f => f.team === t)));
     const size = side === 'men' ? 8 : 16;
@@ -201,6 +205,15 @@ check('an unstarted saved dynasty picks up the commissioner\'s conferences', () 
   migrateLeague(L);
   assert.equal(L.alignment, ALIGNMENT);
   assert.equal(s0.teams.Stanford.conference, 'Pacific-10 Conference');
+  // A men's dynasty saved with the old made-up conferences goes back to the commissioner's.
+  const M = newLeague({ side: 'men' }), m0 = currentSeason(M);
+  M.alignment = 'aau-lacrosse-2030-1';
+  M.conferences['Atlantic Lacrosse League'] = { abbr: 'ALL', color: '#1B4F72' };
+  for (const t of ['Duke', 'North Carolina', 'Virginia', 'Maryland', 'Johns Hopkins', 'Notre Dame']) m0.teams[t].conference = 'Atlantic Lacrosse League';
+  migrateLeague(M);
+  assert.equal(m0.teams['Johns Hopkins'].conference, 'University Athletic Association');
+  assert.equal(m0.teams.Duke.conference, 'Coastal Atlantic Conference');
+  assert.ok(!M.conferences['Atlantic Lacrosse League'], 'the made-up conference is gone');
 });
 
 check('record book', () => {
@@ -214,7 +227,7 @@ check('offseason and the next season', () => {
   beginOffseason(league);
   assert.ok(Array.isArray(draftWarnings(league)));
   addConference(league, 'West Coast', { abbr: 'WC', color: '#123456' });
-  for (const t of ['Utah', 'Ohio State', 'Michigan']) league.draft.teams[t].conference = 'West Coast';
+  for (const t of ['Utah', 'Ohio State', 'Penn State']) league.draft.teams[t].conference = 'West Coast';
   const s2 = startNextSeason(league);
   assert.equal(s2.year, 2031);
   assert.equal(s2.settings.otMinutes, 4);

@@ -1,15 +1,15 @@
 // League (dynasty) lifecycle: creating the league, saving results,
 // simulating, adding teams and conferences, and rolling into new seasons.
 
-import { DEFAULT_LOGOS, AAU_LOGO_SET } from './logo-import.js?v=20261102103649';
-import { START_YEAR, CONFERENCES, COACHES, SIDES, sideOf, conferencesFor, seedTeams, makeTeam, fillSite } from './data.js?v=20261102103649';
-import { generateSchedule, blankGame, DAY_ORDER, DEFAULT_REG_WEEKS, DEFAULT_TOURNEY_WEEKS, DEFAULT_CONF_MATCHES, DEFAULT_MAX_MATCHES, PER_WEEK, confWeeksFor, confWeeksMax, confRounds, confSeriesCounts, confTarget } from './schedule.js?v=20261102103649';
-import { simulateGame, estimateHitsErrors } from './sim.js?v=20261102103649';
-import { generatePoll, releaseDuePolls } from './polls.js?v=20261102103649';
-import { replayRatings, ensureBase } from './ratings.js?v=20261102103649';
-import { progress, lockField, postWeeks, allEvents, regWeeksOf, fieldSize, DEFAULT_NCAA, OLD_DEFAULT_NCAA, pickConfHosts, postseasonFinish, citySiteNames, wsTeams } from './postseason.js?v=20261102103649';
-import { isFinal, records, INDEPENDENT } from './standings.js?v=20261102103649';
-import { rng, normal, clamp, hashStr } from './util.js?v=20261102103649';
+import { DEFAULT_LOGOS, AAU_LOGO_SET } from './logo-import.js?v=20261102111648';
+import { START_YEAR, CONFERENCES, COACHES, SIDES, sideOf, conferencesFor, seedTeams, makeTeam, fillSite } from './data.js?v=20261102111648';
+import { generateSchedule, blankGame, DAY_ORDER, DEFAULT_REG_WEEKS, DEFAULT_TOURNEY_WEEKS, DEFAULT_CONF_MATCHES, DEFAULT_MAX_MATCHES, PER_WEEK, confWeeksFor, confWeeksMax, confRounds, confSeriesCounts, confTarget } from './schedule.js?v=20261102111648';
+import { simulateGame, estimateHitsErrors } from './sim.js?v=20261102111648';
+import { generatePoll, releaseDuePolls } from './polls.js?v=20261102111648';
+import { replayRatings, ensureBase } from './ratings.js?v=20261102111648';
+import { progress, lockField, postWeeks, allEvents, regWeeksOf, fieldSize, DEFAULT_NCAA, OLD_DEFAULT_NCAA, pickConfHosts, postseasonFinish, citySiteNames, wsTeams } from './postseason.js?v=20261102111648';
+import { isFinal, records, INDEPENDENT } from './standings.js?v=20261102111648';
+import { rng, normal, clamp, hashStr } from './util.js?v=20261102111648';
 
 export const SCHEMA_VERSION = 4;
 
@@ -262,7 +262,7 @@ export function deleteConference(league, season, name) {
 // saved dynasty whose first season hasn't started picks up the new alignment
 // when it loads (teams move, missing teams join, empty old conferences go,
 // and the schedule is rebuilt). Settings can apply it by hand too.
-export const ALIGNMENT = 'aau-lacrosse-2030-1';
+export const ALIGNMENT = 'aau-lacrosse-2030-2'; // 2: men's back in the commissioner's conferences
 const DROPPED = []; // schools to take out when the alignment changes
 export function canApplyAlignment(league) {
   const s = league.seasons?.[league.currentYear];
