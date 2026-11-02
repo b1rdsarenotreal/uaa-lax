@@ -1,0 +1,53 @@
+# AAU Lacrosse
+
+A college lacrosse dynasty set in 2030, women's and men's as two separate
+dynasties behind a switch in the top bar: women's has the owner's 37 AAU
+lacrosse programs in his conferences, men's the 24 men's programs in four
+six-team men's lacrosse conferences made for this dynasty (the owner asked
+for that, like men's volleyball). It started as a copy of AAU Basketball
+(itself from AAU Field Hockey, AAU Soccer, AAU Volleyball and the owner's MCS
+Dynasty) and keeps that engine and its features, adapted to lacrosse.
+
+**It is not synced with MCS Dynasty, SACAA Dynasty or any other AAU app.**
+Changes here aren't ported to those repos, and theirs aren't ported here,
+unless the owner asks.
+
+## Lacrosse adaptations to keep in mind
+
+- Game fields keep the MCS names: `homeLine`/`awayLine` are goals per period
+  (four quarters, then sudden-victory overtimes), `homeR`/`awayR` goals,
+  `homeH`/`awayH` shots, `homeE`/`awayE` shots on goal. `g.pk` is never set.
+  A record's `rs`/`ra` are goals for and against.
+- **No ties:** overtime periods (`settings.otMinutes`: men's 4, women's 3)
+  until someone scores; at most one goal in an overtime period, and only in
+  the last one. `setOvertime` in `js/sim.js` sets the live `OT` on load.
+- Ratings are stored as `off`, `pit`, `def` and shown as ATT, MID, DEF.
+  OVR = 0.4/0.3/0.3.
+- Every league has `league.sport = 'lacrosse'` so AAU History can tell it
+  from field hockey (both have four low-scoring quarters).
+- Schedule (`js/schedule.js`): week 1 starts the last Monday in January
+  (`dateOf`), opening weekend first; 13 weeks. Conference play (`confTarget`:
+  double round robin for 6 or fewer, else single, at most `confMatches` 10)
+  fills the last weeks, one weekend game a week plus midweek games when the
+  rounds don't fit. Non-conference games mostly Saturday, some Tue/Wed, at
+  most two a week, never back to back; cap `maxMatches` (men's 16, women's 17).
+- Postseason stages keep the MCS internal names: `regionals` = regions,
+  `supers`, `mcws` = the Final Four. Women's default 4 regions of 4 (16) at
+  the higher seed's field in one week; men's 4 regions of 2 (8). Men's Final
+  Four Saturday/Monday (`finalMonday`), women's Friday/Sunday. Automatic bids
+  only for conferences of `aqMin` (4) or more; conference tournaments take
+  the top 4. User-facing text never says NCAA or MCWS.
+- On-screen text says "game".
+- Women's and men's: `league.side` is 'women' or 'men', each with its own
+  save key (`js/store.js`), team rows and coaches (`js/data.js`, edited
+  directly) and default settings (`defaultSettings(side)`). Keep features
+  shared; put differences in data or settings.
+- Ratings come from the final 2026 USA Lacrosse Top 20 with the formula in
+  `js/data.js`; coaches are the real 2026 head coaches.
+
+## Before every commit
+
+- `python3 tools/stamp.py`
+- `sh tools/check.sh`
+- `node tests/logic.test.mjs`
+- `python3 tests/ui_test.py` (Playwright; Chromium is preinstalled)
