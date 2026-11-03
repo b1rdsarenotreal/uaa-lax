@@ -102,7 +102,7 @@ with sync_playwright() as p:
     # The men's dynasty: its own conferences and save.
     pg.goto(U + "#/home"); pg.wait_for_timeout(200)
     pg.click('[data-side="men"]'); pg.wait_for_selector(".kpis"); pg.wait_for_timeout(300)
-    assert pg.locator("#league-name").inner_text() == "AAU Men's Lacrosse"
+    pg.wait_for_timeout(800); assert pg.locator("#league-name").inner_text() == "AAU Men's Lacrosse", pg.locator("#league-name").inner_text()
     visit(pg, "#/schedule")
     pg.locator(".game[data-game]").first.click(); pg.wait_for_timeout(200)
     pg.click("#m-sim"); pg.wait_for_timeout(100); pg.click("#m-save"); pg.wait_for_timeout(200)
