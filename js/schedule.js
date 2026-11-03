@@ -14,9 +14,9 @@
 // When `prev` (last season) is given, conference opponents who met once last
 // year swap home and away.
 
-import { isIndependent } from './standings.js?v=20261103130611';
-import { cityPoint, miles } from './geo.js?v=20261103130611';
-import { rng, shuffle, hashStr } from './util.js?v=20261103130611';
+import { isIndependent } from './standings.js?v=20261103142758';
+import { cityPoint, miles } from './geo.js?v=20261103142758';
+import { rng, shuffle, hashStr } from './util.js?v=20261103142758';
 
 export const DEFAULT_REG_WEEKS = 13;
 export const DEFAULT_TOURNEY_WEEKS = 0; // kept for older code paths
@@ -38,11 +38,13 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 // ---------- the calendar ----------
 
-// Week 1 starts on the last Monday in January of the season's year (from
-// January 26 to February 1), so its weekend is the first in February.
+// Seasons are academic years: the 2030 season is 2030–31, so lacrosse, a
+// spring sport, is played in the spring of 2031. Week 1 starts on the last
+// Monday in January of that spring (January 26 to February 1), so its
+// weekend is the first in February.
 export function seasonStart(year) {
-  const d = new Date(Date.UTC(year, 0, 26));
-  return new Date(Date.UTC(year, 0, 26 + ((8 - d.getUTCDay()) % 7)));
+  const y = year + 1, d = new Date(Date.UTC(y, 0, 26));
+  return new Date(Date.UTC(y, 0, 26 + ((8 - d.getUTCDay()) % 7)));
 }
 // The calendar date of a week and day (a Date at UTC midnight).
 export function dateOf(year, week, day) {
@@ -50,9 +52,9 @@ export function dateOf(year, week, day) {
   d.setUTCDate(d.getUTCDate() + (week - 1) * 7 + Math.max(0, DAYS.indexOf(day)));
   return d;
 }
-// The week and day of a date.
+// The week and day of a date (month and date in the spring of the season).
 export function weekDayOf(year, month, date) {
-  const n = Math.round((Date.UTC(year, month, date) - seasonStart(year).getTime()) / 864e5);
+  const n = Math.round((Date.UTC(year + 1, month, date) - seasonStart(year).getTime()) / 864e5);
   return { week: Math.floor(n / 7) + 1, day: DAYS[((n % 7) + 7) % 7] };
 }
 // The weeks conference play may use: all but the first two.

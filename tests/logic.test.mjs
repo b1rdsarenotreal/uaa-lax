@@ -84,7 +84,7 @@ check('games: four quarters, sudden-victory overtime, never a tie', () => {
 for (const side of ['women', 'men']) check(`${side}'s schedule: weekends and midweek, conference play at the end`, () => {
   const L = newLeague({ side }), s = currentSeason(L), g = reg(s);
   assert.equal(s.regWeeks, DEFAULT_REG_WEEKS);
-  assert.equal(dateOf(s.year, 1, 'Sat').toISOString().slice(0, 10), '2030-02-02', 'the first Saturday in February');
+  assert.equal(dateOf(s.year, 1, 'Sat').toISOString().slice(0, 10), '2031-02-01', 'the first Saturday in February of the spring (the 2030 season is 2030–31)');
   assert.ok(g.every(x => x.week > 1 || ['Sat', 'Sun'].includes(x.day)), 'opening weekend first');
   const seen = new Set();
   for (const x of g) for (const t of [x.home, x.away]) { const k = `${t}|${absDay(x)}`; assert.ok(!seen.has(k), k); seen.add(k); }
