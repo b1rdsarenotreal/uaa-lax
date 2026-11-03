@@ -38,13 +38,22 @@
 // Coaches who couldn't be confirmed start as open jobs; name them on the
 // Coaches page. Home fields are each school's lacrosse stadium.
 
-import { DEFAULT_LOGOS } from './logo-import.js?v=20261102225955';
+import { DEFAULT_LOGOS } from './logo-import.js?v=20261102233334';
 
 export const START_YEAR = 2030;
 
 // The commissioner's conferences (from the AAU Dynasty), each with a logo
 // drawn for these dynasties (img/conf/).
-const L = f => `img/conf/${f}.svg`;
+// Conference logos the owner picked from the web (linked, not copied; the
+// drawn ones in img/conf/ stay for CAC, SWC, UCAA and as fallbacks).
+export const CONF_LOGO_LINKS = {
+  bigten: 'https://content.sportslogos.net/logos/153/4661/full/big_ten_conference_logo_primary_20115933.png',
+  ivy: 'https://content.sportslogos.net/logos/153/4824/full/ivy_league_logo_primary_2019_sportslogosnet-9024.png',
+  metro: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/METRO_Primary_LtBG.png/500px-METRO_Primary_LtBG.png',
+  pac10: 'https://content.sportslogos.net/logos/153/4945/full/pacific-10_conference_logo_wordmark_1995_sportslogosnet-1134.png',
+  uaa: 'https://dbukjj6eu5tsf.cloudfront.net/uaasports.info/images/responsive_2023/logo-main.svg',
+};
+const L = f => CONF_LOGO_LINKS[f] || `img/conf/${f}.svg`;
 export const CONFERENCES = {
   'Big Ten': { abbr: 'B1G', color: '#0088CE', altColor: '#0B2A4A', logo: L('bigten') },
   'Coastal Atlantic Conference': { abbr: 'CAC', color: '#3A4A5C', altColor: '#5CC6C2', logo: L('cac') },

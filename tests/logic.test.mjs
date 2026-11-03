@@ -41,7 +41,7 @@ check("the AAU lacrosse programs in the commissioner's conferences", () => {
   assert.ok(ovr(M.Princeton) > ovr(M.MIT) + 35);
   assert.equal(new Set(Object.values(MEN_COACHES)).size, Object.keys(MEN_COACHES).length);
   assert.equal(new Set(Object.values(COACHES)).size, Object.keys(COACHES).length);
-  for (const c of Object.keys(CONFERENCES)) if (CONFERENCES[c].logo) assert.ok(existsSync(new URL(`../${CONFERENCES[c].logo}`, import.meta.url)), `${c} logo`);
+  for (const c of Object.keys(CONFERENCES)) if (CONFERENCES[c].logo) assert.ok((/^https:\/\//.test(CONFERENCES[c].logo) || existsSync(new URL(`../${CONFERENCES[c].logo}`, import.meta.url))), `${c} logo`);
   const s = splitOvr('Duke', 80);
   assert.ok(Math.abs(0.4 * s.off + 0.3 * s.pit + 0.3 * s.def - 80) <= 0.5);
   assert.equal(newLeague({ side: 'men' }).sport, 'lacrosse');
