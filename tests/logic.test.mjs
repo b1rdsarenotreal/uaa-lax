@@ -246,3 +246,30 @@ check('a saved league loads again', () => {
 });
 
 console.log(`${n} checks ok in ${Date.now() - t0} ms`);
+
+// ---- NPI ----
+{
+  const { npi, rating, records: recsOf } = await import('../js/standings.js');
+  const { NPI_BY_SIDE } = await import('../js/league.js');
+  for (const side of ['women', 'men']) {
+    const lg = newLeague({ side }), s = currentSeason(lg);
+    assert.equal(s.settings.index, 'npi', 'new leagues use the NPI');
+    assert.deepEqual(s.settings.npi, NPI_BY_SIDE[side], `${side} has its own NPI dials`);
+    simGames(s, g => g.type === 'regular', { max: 12000 });
+    const n = npi(s), r = rating(s), recs = recsOf(s);
+    const vals = Object.values(n).filter(x => x.games).map(x => x.npi);
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+    assert.ok(Math.abs(mean - 50) < 4, `NPI averages near 50 (${mean.toFixed(2)})`);
+    for (const [t, x] of Object.entries(n)) {
+      if (!x.games) continue;
+      assert.equal(r[t].rpi, x.npi, 'rating() is the NPI');
+      assert.ok(x.adj.w >= Math.min(Math.ceil(s.settings.npi.minWins), recs[t].w), `${t} keeps its minimum wins`);
+      assert.ok(x.adj.l <= recs[t].l && x.adj.l + x.adj.t + x.adj.w + x.dropped === x.games, 'only wins are dropped');
+    }
+    const old = JSON.parse(JSON.stringify(lg)); delete old.indexVersion; Object.assign(currentSeason(old).settings, { index: undefined, npi: undefined });
+    migrateLeague(old);
+    assert.equal(currentSeason(old).settings.index, 'npi');
+    assert.deepEqual(currentSeason(old).settings.npi, NPI_BY_SIDE[side]);
+  }
+  console.log('NPI ok');
+}

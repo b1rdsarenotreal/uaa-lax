@@ -39,6 +39,15 @@ unless the owner asks.
   Four Saturday/Monday (`finalMonday`), women's Friday/Sunday. Automatic bids
   only for conferences of `aqMin` (4) or more; conference tournaments take
   the top 4. User-facing text never says NCAA or MCWS.
+- Selection uses the Power Index (NPI): `npi` in `js/standings.js`, with
+  each side's NCAA Division III dials in `settings.npi` (`NPI_BY_SIDE` in
+  `js/league.js`), when `settings.index` is 'npi' (the default;
+  `indexVersion` 1 switched older saves from the current or next season
+  on). A level game counts as a tie in the NPI even if penalty kicks or a
+  shootout decided it. The committee goes straight down the NPI: no tiers
+  (`sheet.tiers` empty). `rating(season)` gives the season's index in the
+  RPI's shape (value in `rpi`, plus `rank`, `sosRank`); use it, not
+  `rpi()`, and `indexName(season)` for on-screen labels.
 - On-screen text says "game".
 - Women's and men's: `league.side` is 'women' or 'men', each with its own
   save key (`js/store.js`), team rows and coaches (`js/data.js`, edited

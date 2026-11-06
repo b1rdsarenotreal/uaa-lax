@@ -1,15 +1,15 @@
 // League (dynasty) lifecycle: creating the league, saving results,
 // simulating, adding teams and conferences, and rolling into new seasons.
 
-import { DEFAULT_LOGOS, AAU_LOGO_SET } from './logo-import.js?v=20261105175434';
-import { START_YEAR, CONFERENCES, CONF_LOGO_LINKS, COACHES, SIDES, sideOf, conferencesFor, seedTeams, makeTeam, fillSite } from './data.js?v=20261105175434';
-import { generateSchedule, blankGame, DAY_ORDER, DEFAULT_REG_WEEKS, DEFAULT_TOURNEY_WEEKS, DEFAULT_CONF_MATCHES, DEFAULT_MAX_MATCHES, PER_WEEK, confWeeksFor, confWeeksMax, confRounds, confSeriesCounts, confTarget } from './schedule.js?v=20261105175434';
-import { simulateGame, estimateHitsErrors } from './sim.js?v=20261105175434';
-import { generatePoll, releaseDuePolls } from './polls.js?v=20261105175434';
-import { replayRatings, ensureBase } from './ratings.js?v=20261105175434';
-import { progress, lockField, postWeeks, allEvents, regWeeksOf, fieldSize, DEFAULT_NCAA, OLD_DEFAULT_NCAA, pickConfHosts, postseasonFinish, citySiteNames, wsTeams } from './postseason.js?v=20261105175434';
-import { isFinal, records, INDEPENDENT } from './standings.js?v=20261105175434';
-import { rng, normal, clamp, hashStr } from './util.js?v=20261105175434';
+import { DEFAULT_LOGOS, AAU_LOGO_SET } from './logo-import.js?v=20261105215752';
+import { START_YEAR, CONFERENCES, CONF_LOGO_LINKS, COACHES, SIDES, sideOf, conferencesFor, seedTeams, makeTeam, fillSite } from './data.js?v=20261105215752';
+import { generateSchedule, blankGame, DAY_ORDER, DEFAULT_REG_WEEKS, DEFAULT_TOURNEY_WEEKS, DEFAULT_CONF_MATCHES, DEFAULT_MAX_MATCHES, PER_WEEK, confWeeksFor, confWeeksMax, confRounds, confSeriesCounts, confTarget } from './schedule.js?v=20261105215752';
+import { simulateGame, estimateHitsErrors } from './sim.js?v=20261105215752';
+import { generatePoll, releaseDuePolls } from './polls.js?v=20261105215752';
+import { replayRatings, ensureBase } from './ratings.js?v=20261105215752';
+import { progress, lockField, postWeeks, allEvents, regWeeksOf, fieldSize, DEFAULT_NCAA, OLD_DEFAULT_NCAA, pickConfHosts, postseasonFinish, citySiteNames, wsTeams } from './postseason.js?v=20261105215752';
+import { isFinal, records, INDEPENDENT } from './standings.js?v=20261105215752';
+import { rng, normal, clamp, hashStr } from './util.js?v=20261105215752';
 
 export const SCHEMA_VERSION = 4;
 
@@ -19,13 +19,23 @@ export const SCHEMA_VERSION = 4;
 // 3-minute overtimes, 17 games, 16 teams (four regions of four on campus,
 // Friday and Sunday), the Final Four Friday and Sunday.
 const MEN_SETTINGS = { otMinutes: 4, maxMatches: 16, finalMonday: true, mcwsVenue: 'Scott Stadium', mcwsCity: 'Charlottesville, Va.', ncaa: { regionals: 4, perRegional: 2, wsSize: 4, homeSites: true, homeWeeks: 1, campusRounds: 0 } };
-export function defaultSettings(side = 'women') {
+function baseSettings(side = 'women') {
   const base = {
     volatility: 1, confTourney: {}, confFormat: {}, mcwsName: 'Final Four', mcwsVenue: 'Martin Stadium', mcwsCity: 'Evanston, Ill.', aqMin: 4, development: 'normal', form: 'normal',
     periods: 4, otMinutes: 3, confDays: 'ws', confWeekend: {},
     regWeeks: DEFAULT_REG_WEEKS, tourneyWeeks: DEFAULT_TOURNEY_WEEKS, confMatches: DEFAULT_CONF_MATCHES, maxMatches: DEFAULT_MAX_MATCHES, ncaa: { ...DEFAULT_NCAA },
   };
   return side === 'men' ? { ...base, ...JSON.parse(JSON.stringify(MEN_SETTINGS)) } : base;
+}
+
+// The NCAA's Division III NPI dials for each side (see NPI_DIALS in
+// js/standings.js). Selection goes by the NPI unless settings.index is 'rpi'.
+export const NPI_BY_SIDE = {
+  women: {win: 25, sos: 75, away: 1, home: 1, otWin: 1, qwbBase: 57, qwbMult: 0.5, minWins: 8},
+  men: {win: 25, sos: 75, away: 1, home: 1, otWin: 1, qwbBase: 52, qwbMult: 0.5, minWins: 7},
+};
+export function defaultSettings(side = 'women') {
+  return { index: 'npi', npi: { ...(NPI_BY_SIDE[side] || NPI_BY_SIDE.women) }, ...baseSettings(side) };
 }
 
 export function newSeason(year, teams, settings = defaultSettings(), prev = null) {
@@ -46,7 +56,7 @@ export function newLeague({ side = 'women', name = SIDES[side === 'men' ? 'men' 
     schema: SCHEMA_VERSION, name, currentYear: year,
     conferences: JSON.parse(JSON.stringify(conferences)),
     coaches: {}, nextCoachId: 1,
-    seasons: { [year]: season }, side, sport: 'lacrosse', logoSet: AAU_LOGO_SET, alignment: ALIGNMENT,
+    seasons: { [year]: season }, side, indexVersion: 1, sport: 'lacrosse', logoSet: AAU_LOGO_SET, alignment: ALIGNMENT,
   };
   ensureIndependent(league);
   for (const t of Object.values(teams)) { t.coachId = t.coach ? newCoach(league, t.coach) : null; delete t.coach; }
@@ -548,6 +558,7 @@ export function startNextSeason(league) {
   delete league.draft;
   for (const t of Object.values(teams)) delete t.dev;
   const season = newSeason(year, teams, prev.settings, prev);
+  if (league.npiNext) { Object.assign(season.settings, { index: 'npi', npi: defaultSettings(sideOf(league)).npi }); delete league.npiNext; }
   season.coachMoves = moves;
   season.carryPoll = prev.polls.final || null;
   season.polls[0] = generatePoll(season, 0);
@@ -586,6 +597,16 @@ export function ensureIndependent(league) {
 }
 
 export function migrateLeague(league) {
+  // The NPI replaces the RPI (the owner's request, Nov. 2026): the current
+  // season switches if its field isn't set yet, otherwise the next one does.
+  // Played seasons keep the RPI they were selected by.
+  if ((league.indexVersion || 0) < 1) {
+    const se = league.seasons?.[league.currentYear];
+    if (se && ['regular', 'conf', 'selection'].includes(se.phase || 'regular')) Object.assign(se.settings, { index: 'npi', npi: defaultSettings(sideOf(league)).npi });
+    else league.npiNext = true;
+    if (league.draft) league.npiNext = true;
+    league.indexVersion = 1; league.migrated = true;
+  }
   const women = sideOf(league) === 'women';
   league.sport ||= 'lacrosse'; // lets AAU History tell lacrosse from field hockey
   ensureIndependent(league);
