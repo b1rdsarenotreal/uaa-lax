@@ -263,7 +263,8 @@ console.log(`${n} checks ok in ${Date.now() - t0} ms`);
     for (const [t, x] of Object.entries(n)) {
       if (!x.games) continue;
       assert.equal(r[t].rpi, x.npi, 'rating() is the NPI');
-      assert.ok(x.adj.w >= Math.min(Math.ceil(s.settings.npi.minWins), recs[t].w), `${t} keeps its minimum wins`);
+      // NPI wins: a game won on penalty kicks or a shootout is a tie there.
+      assert.ok(x.adj.w >= Math.min(Math.ceil(s.settings.npi.minWins), x.adj.w + x.dropped), `${t} keeps its minimum wins`);
       assert.ok(x.adj.l <= recs[t].l && x.adj.l + x.adj.t + x.adj.w + x.dropped === x.games, 'only wins are dropped');
     }
     const old = JSON.parse(JSON.stringify(lg)); delete old.indexVersion; Object.assign(currentSeason(old).settings, { index: undefined, npi: undefined });
