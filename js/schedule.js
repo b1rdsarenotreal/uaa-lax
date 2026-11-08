@@ -14,9 +14,9 @@
 // When `prev` (last season) is given, conference opponents who met once last
 // year swap home and away.
 
-import { isIndependent } from './standings.js?v=20261107172232';
-import { cityPoint, miles } from './geo.js?v=20261107172232';
-import { rng, shuffle, hashStr } from './util.js?v=20261107172232';
+import { isIndependent } from './standings.js?v=20261107205850';
+import { cityPoint, miles } from './geo.js?v=20261107205850';
+import { rng, shuffle, hashStr } from './util.js?v=20261107205850';
 
 export const DEFAULT_REG_WEEKS = 13;
 export const DEFAULT_TOURNEY_WEEKS = 0; // kept for older code paths
