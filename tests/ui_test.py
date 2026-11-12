@@ -41,7 +41,7 @@ with sync_playwright() as p:
         visit(pg, h, "a-" + h.strip("#/").replace("/", "-").replace("%20", "_"))
     t = visit(pg, "#/teams")
     assert "ATT" in t and "MID" in t and "CTL" not in t
-    assert pg.locator("#league-name").inner_text() == "AAU Women's Lacrosse"
+    assert pg.locator("#league-name").inner_text() == "Women's Lacrosse"
 
     # Enter a score by hand: goals by quarter, totals worked out, a tie
     # needs sudden-victory overtime, shots estimated.
@@ -102,7 +102,7 @@ with sync_playwright() as p:
     # The men's dynasty: its own conferences and save.
     pg.goto(U + "#/home"); pg.wait_for_timeout(200)
     pg.click('[data-side="men"]'); pg.wait_for_selector(".kpis"); pg.wait_for_timeout(300)
-    pg.wait_for_timeout(800); assert pg.locator("#league-name").inner_text() == "AAU Men's Lacrosse", pg.locator("#league-name").inner_text()
+    pg.wait_for_timeout(800); assert pg.locator("#league-name").inner_text() == "Men's Lacrosse", pg.locator("#league-name").inner_text()
     visit(pg, "#/schedule")
     pg.locator(".game[data-game]").first.click(); pg.wait_for_timeout(200)
     pg.click("#m-sim"); pg.wait_for_timeout(100); pg.click("#m-save"); pg.wait_for_timeout(200)
@@ -113,7 +113,7 @@ with sync_playwright() as p:
     t = visit(pg, "#/team/Princeton", "g-men-team")
     assert "Matt Madalon" in t and "Class of 1952 Stadium" in t and "Ivy League" in t
     pg.click('[data-side="women"]'); pg.wait_for_selector(".kpis"); pg.wait_for_timeout(300)
-    assert pg.locator("#league-name").inner_text() == "AAU Women's Lacrosse"
+    assert pg.locator("#league-name").inner_text() == "Women's Lacrosse"
     assert "National Champion" in visit(pg, "#/postseason"), "the women's dynasty kept its season"
 
     pg.set_viewport_size({"width": 390, "height": 800})
