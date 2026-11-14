@@ -5,9 +5,9 @@
 // most of the change (see `shares`). Because it's a replay, edited or
 // cleared results always give consistent ratings.
 
-import { winProbability, OVR_WEIGHTS } from './sim.js?v=20261113221323';
-import { isFinal } from './standings.js?v=20261113221323';
-import { clamp } from './util.js?v=20261113221323';
+import { winProbability, OVR_WEIGHTS } from './sim.js?v=20261113225423';
+import { isFinal } from './standings.js?v=20261113225423';
+import { clamp } from './util.js?v=20261113225423';
 
 export const FORM_LEVELS = { none: 0, small: 0.45, normal: 0.8, big: 1.2 };
 const KEYS = ['off', 'pit', 'def'];
