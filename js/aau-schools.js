@@ -1,4 +1,4 @@
-import { CONF_LOGO_LINKS } from './data.js?v=20261116232155';
+import { CONF_LOGO_LINKS } from './data.js?v=20261116233234';
 
 // Every AAU member school, for the "AAU school" pick on the Add team form:
 // abbreviation, mascot, colors, city and the conference it plays in in the
@@ -134,6 +134,8 @@ export const AAU_CONFERENCES = {
 // team form fills these in too.
 export const AAU_PROGRAMS = {
   women: {
+    // The owner's new schools (Nov. 2026): home venue only; coaches are added by hand.
+    "San Diego State": { stadium: "SDSU Sports Deck" },
     "Syracuse": { stadium: "JMA Wireless Dome", coach: "Regy Thorpe" },
     "UConn": { stadium: "Joseph J. Morrone Stadium", coach: "Katie Woods" },
   },
