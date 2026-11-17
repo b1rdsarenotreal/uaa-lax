@@ -38,7 +38,7 @@
 // Coaches who couldn't be confirmed start as open jobs; name them on the
 // Coaches page. Home fields are each school's lacrosse stadium.
 
-import { DEFAULT_LOGOS } from './logo-import.js?v=20261116233234';
+import { DEFAULT_LOGOS } from './logo-import.js?v=20261117005231';
 
 export const START_YEAR = 2030;
 
