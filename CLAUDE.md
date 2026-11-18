@@ -74,6 +74,16 @@ unless the owner asks.
   shared; put differences in data or settings.
 - Ratings come from the final 2026 USA Lacrosse Top 20 with the formula in
   `js/data.js`; coaches are the real 2026 head coaches.
+- Conference home and away (`js/homeaway.js`, the owner's rule, Nov. 2026):
+  no team plays more than two conference weekends in a row away (`MAX_AWAY`)
+  or three at home (`MAX_HOME`); a week without a conference game ends a
+  run. `generateSchedule` draws the season (`drawSchedule`), then
+  `spreadConfHomes` trades hosts between a pair's two meetings, turns around
+  triangles of single meetings or a single meeting (every team within one
+  game or series of half), and trades two conference weeks when every team
+  plays on the same days in both. A pair meeting twice keeps one at each
+  school. A once-a-year pair swaps hosts from last year unless the rule
+  needs otherwise.
 - Regionals avoid first-round matchups between conference rivals
   (`avoidConferenceMatchups` in `js/postseason.js`, the owner's rule): after
   the serpentine, teams on one seed line trade regionals (lowest lines
