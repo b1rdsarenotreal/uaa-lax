@@ -33,6 +33,11 @@ unless the owner asks.
   fills the last weeks, one weekend game a week plus midweek games when the
   rounds don't fit. Non-conference games mostly Saturday, some Tue/Wed, at
   most two a week, never back to back; cap `maxMatches` (men's 16, women's 17).
+- Non-conference dates are mixed (`mixNonConfDates`, the owner's ask,
+  Nov. 2026): games are placed week by week, pairing similar teams, so a
+  top team's best opponents would come in a row; random date swaps between
+  non-conference games (none twice a day or back to back, at most two games
+  a week) spread them out.
 - Postseason stages keep the MCS internal names: `regionals` = regions,
   `supers`, `mcws` = the Final Four. Women's default 4 regions of 4 (16) at
   the higher seed's field in one week; men's 4 regions of 2 (8). Men's Final

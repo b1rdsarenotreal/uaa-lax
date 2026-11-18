@@ -14,9 +14,9 @@
 // When `prev` (last season) is given, conference opponents who met once last
 // year swap home and away.
 
-import { isIndependent } from './standings.js?v=20261117010423';
-import { cityPoint, miles } from './geo.js?v=20261117010423';
-import { rng, shuffle, hashStr } from './util.js?v=20261117010423';
+import { isIndependent } from './standings.js?v=20261117171434';
+import { cityPoint, miles } from './geo.js?v=20261117171434';
+import { rng, shuffle, hashStr } from './util.js?v=20261117171434';
 
 export const DEFAULT_REG_WEEKS = 13;
 export const DEFAULT_TOURNEY_WEEKS = 0; // kept for older code paths
@@ -395,6 +395,45 @@ export function generateSchedule(season, seed = hashStr(String(season.year)), pr
     }
     for (const t of names) carry[t] = Math.max(0, want[t]);
   }
+  // Non-conference games are placed week by week, each pairing teams of a
+  // similar level who haven't met, so a top team's strongest opponents would
+  // come one after another. Trade dates between non-conference games at
+  // random wherever the rules still hold, to spread them through the
+  // season (the owner's ask, Nov. 2026).
+  mixNonConfDates(games, r);
   games.sort((a, b) => a.week - b.week || a.order - b.order);
   return games;
+}
+
+// Swap the dates of two non-conference games (four different teams) when
+// afterwards no team plays twice in a day or on back-to-back days, and no
+// team has more than two games in a week.
+function mixNonConfDates(games, r) {
+  const abs = g => g.week * 7 + DAY_ORDER[g.day];
+  const days = {}, nonConf = {}; // nonConf: games a team plays in a week (all kinds)
+  const at = (t, w) => `${t}|${w}`;
+  for (const g of games) for (const t of [g.home, g.away]) {
+    (days[t] ||= new Set()).add(abs(g));
+    nonConf[at(t, g.week)] = (nonConf[at(t, g.week)] || 0) + 1;
+  }
+  const pool = games.filter(g => g.type === 'regular' && !g.confGame);
+  const fits = (t, from, to, wFrom, wTo) => {
+    const set = days[t];
+    for (const k of [-1, 0, 1]) if (to + k !== from && set.has(to + k)) return false;
+    return wFrom === wTo || (nonConf[at(t, wTo)] || 0) < 2;
+  };
+  let swaps = 0;
+  for (let i = 0; i < pool.length * 40; i++) {
+    const g = pool[Math.floor(r() * pool.length)], h = pool[Math.floor(r() * pool.length)];
+    if (g === h || new Set([g.home, g.away, h.home, h.away]).size < 4) continue;
+    const ag = abs(g), ah = abs(h);
+    if (ag === ah) continue;
+    if (![g.home, g.away].every(t => fits(t, ag, ah, g.week, h.week)) || ![h.home, h.away].every(t => fits(t, ah, ag, h.week, g.week))) continue;
+    for (const t of [g.home, g.away]) { days[t].delete(ag); days[t].add(ah); if (g.week !== h.week) { nonConf[at(t, g.week)]--; nonConf[at(t, h.week)] = (nonConf[at(t, h.week)] || 0) + 1; } }
+    for (const t of [h.home, h.away]) { days[t].delete(ah); days[t].add(ag); if (g.week !== h.week) { nonConf[at(t, h.week)]--; nonConf[at(t, g.week)] = (nonConf[at(t, g.week)] || 0) + 1; } }
+    const gw = g.week, gd = g.day;
+    g.week = h.week; g.day = h.day; g.order = DAY_ORDER[h.day];
+    h.week = gw; h.day = gd; h.order = DAY_ORDER[gd]; swaps++;
+  }
+  return swaps;
 }
